@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusConnect - Login/Signup</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: #001f4d;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        
+        .container {
+            background: #fff;
+            padding: 30px 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            width: 380px;
+            text-align: center;
+        }
+        
+        .container img {
+            width: 80px;
+            margin-bottom: 15px;
+        }
+        
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        input:focus,
+        select:focus {
+            border-color: #2575fc;
+            box-shadow: 0 0 8px rgba(37, 117, 252, 0.5);
+        }
+        
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            background: #2575fc;
+            color: #fff;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            background: #6a11cb;
+        }
+        
+        p {
+            margin-top: 15px;
+            color: #555;
+        }
+        
+        span {
+            color: #2575fc;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .form {
+            display: none;
+        }
+        
+        .form.active {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="CampusConnect Logo">
+
+        <!-- Login Form -->
+        <form id="loginForm" class="form active">
+            <h2>Login</h2>
+            <input type="text" id="loginUsername" placeholder="Username" required>
+            <input type="password" id="loginPassword" placeholder="Password" required>
+            <select id="loginRole" required>
+            <option value="">Select Role</option>
+            <option value="student">Student</option>
+            <option value="company">Company</option>
+            <option value="admin">Admin</option>
+        </select>
+            <button type="submit">Login</button>
+            <p>Don't have an account? <span id="showSignup">Signup</span></p>
+        </form>
+
+        <!-- Signup Form -->
+        <form id="signupForm" class="form">
+            <h2>Signup</h2>
+            <input type="text" id="signupUsername" placeholder="Username" required>
+            <input type="email" id="signupEmail" placeholder="Email" required>
+            <input type="password" id="signupPassword" placeholder="Password" required>
+            <input type="password" id="signupConfirm" placeholder="Confirm Password" required>
+            <select id="signupRole" required>
+            <option value="">Select Role</option>
+            <option value="student">Student</option>
+            <option value="company">Company</option>
+            <option value="admin">Admin</option>
+        </select>
+            <button type="submit">Signup</button>
+            <p>Already have an account? <span id="showLogin">Login</span></p>
+        </form>
+    </div>
+
+    <script>
+        // Toggle forms
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        document.getElementById('showSignup').addEventListener('click', () => {
+            loginForm.classList.remove('active');
+            signupForm.classList.add('active');
+        });
+        document.getElementById('showLogin').addEventListener('click', () => {
+            signupForm.classList.remove('active');
+            loginForm.classList.add('active');
+        });
+
+        // Default admin
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+        if (!users.some(u => u.role === 'admin')) {
+            users.push({
+                username: "admin",
+                email: "admin@example.com",
+                password: "admin123",
+                role: "admin"
+            });
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+
+        // Signup
+        signupForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('signupUsername').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirm = document.getElementById('signupConfirm').value;
+            const role = document.getElementById('signupRole').value;
+
+            if (password !== confirm) {
+                alert("Passwords do not match!");
+                return;
+            }
+
+            users = JSON.parse(localStorage.getItem('users')) || [];
+            if (users.some(u => u.username === username || u.email === email)) {
+                alert("Username or Email already exists!");
+                return;
+            }
+
+            users.push({
+                username,
+                email,
+                password,
+                role
+            });
+            localStorage.setItem('users', JSON.stringify(users));
+            alert("Signup successful! Please login.");
+            signupForm.reset();
+            signupForm.classList.remove('active');
+            loginForm.classList.add('active');
+        });
+
+        // Login
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            const role = document.getElementById('loginRole').value;
+
+            users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(u => u.username === username && u.password === password && u.role === role);
+
+            if (user) {
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                if (role === 'student') window.location.href = "student.html";
+                else if (role === 'company') window.location.href = "company.html";
+                else window.location.href = "admin.html"; // redirect admin here
+            } else {
+                alert("Invalid username, password, or role!");
+            }
+        });
+    </script>
+</body>
+
+</html>

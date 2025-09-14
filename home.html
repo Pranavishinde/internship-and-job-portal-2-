@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internship & Job Portal</title>
+
+    <!-- Embedded CSS -->
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f9f9f9;
+        }
+        /* Navbar */
+        
+        header {
+            background: #2c3e50;
+            padding: 15px 30px;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        nav .logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: #fff;
+        }
+        
+        nav ul {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+        
+        nav ul li {
+            margin-left: 20px;
+        }
+        
+        nav ul li a {
+            text-decoration: none;
+            color: #fff;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: #1abc9c;
+        }
+        /* Hero Section */
+        
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("https://images.unsplash.com/photo-1521791136064-7986c2920216") no-repeat center center/cover;
+            height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+        }
+        
+        .hero-content h1 {
+            font-size: 42px;
+        }
+        
+        .hero-content p {
+            font-size: 18px;
+            margin: 15px 0;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            background: #1abc9c;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .btn:hover {
+            background: #16a085;
+        }
+        /* Features Section */
+        
+        .features {
+            padding: 50px 20px;
+            text-align: center;
+        }
+        
+        .features h2 {
+            font-size: 28px;
+            margin-bottom: 30px;
+        }
+        
+        .cards {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            width: 250px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        /* Help & Contact */
+        
+        .help {
+            background: #ecf0f1;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        
+        .help h2 {
+            font-size: 26px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .help p {
+            font-size: 16px;
+            margin: 5px 0;
+        }
+        
+        .help .contact-info {
+            margin-top: 15px;
+            font-weight: bold;
+            color: #1abc9c;
+        }
+        /* FAQ Section */
+        
+        .faq {
+            padding: 50px 20px;
+            background: #fff;
+        }
+        
+        .faq h2 {
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 25px;
+            color: #2c3e50;
+        }
+        
+        .faq-item {
+            margin-bottom: 20px;
+        }
+        
+        .faq-item h3 {
+            font-size: 18px;
+            color: #1abc9c;
+        }
+        
+        .faq-item p {
+            font-size: 15px;
+            color: #333;
+            margin-top: 5px;
+        }
+        /* Footer */
+        
+        footer {
+            background: #2c3e50;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <header>
+        <nav>
+            <div class="logo">JobPortal</div>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="login.html">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Find Your Dream Job & Internship</h1>
+            <p>Connecting students with companies easily and quickly.</p>
+            <button class="btn" onclick="goToLogin()">Get Started</button>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <h2>Why Choose Us?</h2>
+        <div class="cards">
+            <div class="card">
+                <h3>For Students</h3>
+                <p>Browse internships & jobs, apply, and track your applications.</p>
+            </div>
+            <div class="card">
+                <h3>For Companies</h3>
+                <p>Post job openings, view applicants, and connect with talent.</p>
+            </div>
+            <div class="card">
+                <h3>Easy to Use</h3>
+                <p>Simple and user-friendly dashboards for both students & companies.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Help & Contact -->
+    <section class="help" id="help">
+        <h2>Need Help?</h2>
+        <p>If you have any questions or face issues, feel free to reach out:</p>
+        <div class="contact-info">
+            📞 +91 98765 43210 <br> 📧 support@jobportal.com
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq" id="faq">
+        <h2>Frequently Asked Questions</h2>
+
+        <div class="faq-item">
+            <h3>🔹 How do I register as a student?</h3>
+            <p>Click on the "Login" button, then choose register option to create your account.</p>
+        </div>
+
+        <div class="faq-item">
+            <h3>🔹 Can companies post internships for free?</h3>
+            <p>Yes, companies can register and post jobs or internships without any charges.</p>
+        </div>
+
+        <div class="faq-item">
+            <h3>🔹 How do I apply for a job or internship?</h3>
+            <p>Login to your student account, browse jobs or internships, and click "Apply".</p>
+        </div>
+
+        <div class="faq-item">
+            <h3>🔹 How can I contact support?</h3>
+            <p>You can reach us via the help section above with our phone number or email.</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 Job Portal | All Rights Reserved</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        function goToLogin() {
+            window.location.href = "login.html"; // redirect to login page
+        }
+    </script>
+
+</body>
+
+</html>

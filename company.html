@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        body {
+            background: #f4f6f9;
+            color: #333;
+        }
+        
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        button {
+            cursor: pointer;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #0073e6;
+            padding: 1rem 2rem;
+            color: #fff;
+        }
+        
+        nav h1 {
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        nav h1 img {
+            width: 40px;
+            margin-right: 10px;
+        }
+        
+        nav .logout {
+            background: #ff4b5c;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        nav .logout:hover {
+            background: #ff1f3a;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 90vh;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: #1f2937;
+            color: #fff;
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar img {
+            border-radius: 50%;
+            width: 100px;
+            margin: 0 auto 1rem auto;
+            display: block;
+        }
+        
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .sidebar a {
+            padding: 0.8rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 5px;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            color: #fff;
+            font-size: 1rem;
+        }
+        
+        .sidebar a i {
+            margin-right: 10px;
+            color: #3b82f6;
+            font-size: 1.1rem;
+        }
+        
+        .sidebar a:hover {
+            background: #3b82f6;
+            color: #fff;
+        }
+        
+        .sidebar a:hover i {
+            color: #fff;
+        }
+        
+        .main {
+            flex: 1;
+            padding: 2rem;
+        }
+        
+        .section {
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        form {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin-bottom: 2rem;
+        }
+        
+        form input,
+        form textarea,
+        form select {
+            width: 100%;
+            padding: 0.7rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        
+        form button {
+            background: #0073e6;
+            color: #fff;
+            border: none;
+            padding: 0.7rem 1.2rem;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        
+        form button:hover {
+            background: #005bb5;
+        }
+        
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+        
+        .card-body {
+            padding: 1rem;
+        }
+        
+        .card-body h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #0073e6;
+        }
+        
+        .card-body p {
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .card-body button {
+            background: #0073e6;
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        
+        .card-body button:hover {
+            background: #005bb5;
+        }
+        
+        #applicantLoginForm {
+            max-width: 400px;
+            margin: auto;
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        @media (max-width:768px) {
+            .container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                flex-direction: row;
+                overflow-x: auto;
+            }
+            .sidebar h2 {
+                display: none;
+            }
+            .sidebar a {
+                margin: 0 0.5rem;
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <h1>
+            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Job Portal Logo"> JobPortal
+        </h1>
+        <div class="logout" onclick="logout()">Logout</div>
+    </nav>
+
+    <div class="container">
+        <div class="sidebar">
+            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Company Logo">
+            <h2>My Company</h2>
+            <a href="#" onclick="showSection('postInternship')">
+                <i class="fa-solid fa-briefcase"></i> Post Internship
+            </a>
+            <a href="#" onclick="showSection('postJob')">
+                <i class="fa-solid fa-user-tie"></i> Post Job
+            </a>
+            <a href="#" onclick="showSection('viewApplicants')">
+                <i class="fa-solid fa-users"></i> View Applicants
+            </a>
+        </div>
+
+        <div class="main">
+            <!-- Internship Form -->
+            <div id="postInternship" class="section active">
+                <h2>Post Internship</h2>
+                <form id="internshipForm">
+                    <input type="text" placeholder="Company Name" required name="companyName">
+                    <input type="file" accept="image/*" required name="logo" id="internLogo">
+                    <input type="text" placeholder="Title" required name="title">
+                    <input type="text" placeholder="Location" required name="location">
+                    <input type="date" required name="deadline">
+                    <input type="text" placeholder="Required Skills (comma separated)" required name="skills">
+                    <input type="text" placeholder="Experience / Qualification" name="experience">
+
+                    <!-- Paid / Unpaid -->
+                    <select name="paidStatus" id="paidStatus" onchange="toggleStipend()" required>
+                        <option value="">Select Paid/Unpaid</option>
+                        <option value="Paid">Paid</option>
+                        <option value="Unpaid">Unpaid</option>
+                    </select>
+
+                    <!-- Stipend (only visible if Paid) -->
+                    <input type="text" placeholder="Stipend / Salary" name="salary" id="stipendField">
+
+                    <input type="number" placeholder="Number of Openings" required name="openings">
+                    <input type="text" placeholder="Duration (e.g. 6 months)" name="duration">
+                    <input type="text" placeholder="Job Category (e.g. IT, HR, Marketing)" name="category">
+                    <input type="text" placeholder="Perks (Certificate, PPO, Flexible hours)" name="perks">
+                    <input type="text" placeholder="Work Hours (e.g. 9 AM - 6 PM)" name="workHours">
+                    <input type="text" placeholder="Contact Person" name="contactPerson">
+                    <input type="email" placeholder="Contact Email" name="contactEmail">
+                    <input type="url" placeholder="Company Website" name="companyWebsite">
+                    <select name="jobType" required>
+                        <option value="">Select Job Type</option>
+                        <option>Internship</option>
+                        <option>Full-time</option>
+                        <option>Part-time</option>
+                    </select>
+                    <select name="mode" required>
+                        <option value="">Select Mode</option>
+                        <option>Remote</option>
+                        <option>On-site</option>
+                        <option>Hybrid</option>
+                    </select>
+                    <textarea placeholder="Description" rows="3" name="description"></textarea>
+                    <button type="submit">Post Internship</button>
+                </form>
+                <div class="cards" id="internshipPosts"></div>
+            </div>
+
+            <!-- Job Form -->
+            <div id="postJob" class="section">
+                <h2>Post Job</h2>
+                <form id="jobForm">
+                    <input type="text" placeholder="Company Name" required name="companyName">
+                    <input type="file" accept="image/*" required name="logo" id="jobLogo">
+                    <input type="text" placeholder="Title" required name="title">
+                    <input type="text" placeholder="Location" required name="location">
+                    <input type="date" required name="deadline">
+                    <input type="text" placeholder="Required Skills (comma separated)" required name="skills">
+                    <input type="text" placeholder="Experience / Qualification" name="experience">
+                    <input type="text" placeholder="Salary" name="salary">
+                    <input type="number" placeholder="Number of Openings" required name="openings">
+                    <input type="text" placeholder="Duration (if applicable)" name="duration">
+                    <input type="text" placeholder="Job Category (e.g. IT, HR, Marketing)" name="category">
+                    <input type="text" placeholder="Perks (Certificate, Health Insurance, etc.)" name="perks">
+                    <input type="text" placeholder="Work Hours (e.g. 9 AM - 6 PM)" name="workHours">
+                    <input type="text" placeholder="Contact Person" name="contactPerson">
+                    <input type="email" placeholder="Contact Email" name="contactEmail">
+                    <input type="url" placeholder="Company Website" name="companyWebsite">
+                    <select name="jobType" required>
+                        <option value="">Select Job Type</option>
+                        <option>Full-time</option>
+                        <option>Part-time</option>
+                    </select>
+                    <select name="mode" required>
+                        <option value="">Select Mode</option>
+                        <option>Remote</option>
+                        <option>On-site</option>
+                        <option>Hybrid</option>
+                    </select>
+                    <textarea placeholder="Description" rows="3" name="description"></textarea>
+                    <button type="submit">Post Job</button>
+                </form>
+                <div class="cards" id="jobPosts"></div>
+            </div>
+
+            <!-- Applicants -->
+            <div id="viewApplicants" class="section">
+                <h2>View Applicants</h2>
+                <p>Login with your company credentials to see who applied:</p>
+                <form id="applicantLoginForm">
+                    <input type="text" placeholder="Company Name" required name="companyName">
+                    <input type="password" placeholder="Password" required name="password">
+                    <button type="submit">Login</button>
+                </form>
+                <div class="cards" id="applicantsContainer" style="margin-top:1rem;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        function getBase64(file, callback) {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function() {
+                callback(reader.result);
+            }
+            reader.onerror = function(error) {
+                console.log(error);
+            }
+        }
+
+        // Internship form
+        const internshipForm = document.getElementById('internshipForm');
+        const internshipPosts = document.getElementById('internshipPosts');
+        internshipForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const f = new FormData(internshipForm);
+            const file = f.get('logo');
+            getBase64(file, function(logoBase64) {
+                const post = Object.fromEntries(f.entries());
+                post.logo = logoBase64;
+                const internships = JSON.parse(localStorage.getItem('internships') || '[]');
+                internships.push(post);
+                localStorage.setItem('internships', JSON.stringify(internships));
+                internshipPosts.innerHTML += generatePostCard(post);
+                internshipForm.reset();
+                toggleStipend(); // reset stipend visibility
+            });
+        });
+
+        // Job form
+        const jobForm = document.getElementById('jobForm');
+        const jobPosts = document.getElementById('jobPosts');
+        jobForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const f = new FormData(jobForm);
+            const file = f.get('logo');
+            getBase64(file, function(logoBase64) {
+                const post = Object.fromEntries(f.entries());
+                post.logo = logoBase64;
+                const jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
+                jobs.push(post);
+                localStorage.setItem('jobs', JSON.stringify(jobs));
+                jobPosts.innerHTML += generatePostCard(post);
+                jobForm.reset();
+            });
+        });
+
+        // Generate post card
+        function generatePostCard(post) {
+            return `<div class="card">
+                <img src="${post.logo}" alt="Logo">
+                <div class="card-body">
+                    <h3>${post.title}</h3>
+                    <p><strong>Company:</strong> ${post.companyName}</p>
+                    <p><strong>Location:</strong> ${post.location}</p>
+                    <p><strong>Deadline:</strong> ${post.deadline}</p>
+                    <p><strong>Skills:</strong> ${post.skills}</p>
+                    <p><strong>Experience:</strong> ${post.experience}</p>
+                    <p><strong>Paid/Unpaid:</strong> ${post.paidStatus}</p>
+                    <p><strong>Salary/Stipend:</strong> ${post.salary || "N/A"}</p>
+                    <p><strong>Openings:</strong> ${post.openings}</p>
+                    <p><strong>Duration:</strong> ${post.duration}</p>
+                    <p><strong>Category:</strong> ${post.category}</p>
+                    <p><strong>Perks:</strong> ${post.perks}</p>
+                    <p><strong>Work Hours:</strong> ${post.workHours}</p>
+                    <p><strong>Contact:</strong> ${post.contactPerson} (${post.contactEmail})</p>
+                    <p><strong>Website:</strong> <a href="${post.companyWebsite}" target="_blank">${post.companyWebsite}</a></p>
+                    <p><strong>Type:</strong> ${post.jobType}, <strong>Mode:</strong> ${post.mode}</p>
+                    <p>${post.description}</p>
+                </div>
+            </div>`;
+        }
+
+        // Toggle stipend field
+        function toggleStipend() {
+            const status = document.getElementById("paidStatus").value;
+            const stipendField = document.getElementById("stipendField");
+            if (status === "Paid") {
+                stipendField.style.display = "block";
+            } else {
+                stipendField.style.display = "none";
+                stipendField.value = "";
+            }
+        }
+
+        // Initialize stipend field
+        toggleStipend();
+
+        // Logout
+        function logout() {
+            alert("You have logged out!");
+            window.location.href = "login.html"; // <-- change this to your actual login page
+        }
+    </script>
+</body>
+
+</html>

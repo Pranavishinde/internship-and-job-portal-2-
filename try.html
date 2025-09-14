@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        body {
+            background: #f4f6f9;
+            color: #333;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #0073e6;
+            padding: 1rem 2rem;
+            color: #fff;
+        }
+        
+        nav h1 {
+            font-size: 1.8rem;
+        }
+        
+        nav .logout {
+            background: #ff4b5c;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        nav .logout:hover {
+            background: #ff1f3a;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 90vh;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: #1f2937;
+            color: #fff;
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar img {
+            border-radius: 50%;
+            width: 100px;
+            margin: 0 auto 1rem auto;
+            display: block;
+        }
+        
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .sidebar a {
+            padding: 0.8rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 5px;
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        
+        .sidebar a:hover {
+            background: #3b82f6;
+        }
+        
+        .main {
+            flex: 1;
+            padding: 2rem;
+            background: linear-gradient(180deg, #f4f6f9, #e8ebf1);
+            border-radius: 10px;
+            overflow: auto;
+        }
+        
+        .section {
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            max-height: 75vh;
+            overflow-y: auto;
+        }
+        
+        .card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: 0.3s;
+            position: relative;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+        
+        .card-body {
+            padding: 1rem;
+        }
+        
+        .card-body h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #0073e6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-body p {
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .card-body button {
+            background: #0073e6;
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: 0.3s;
+            margin-right: 0.5rem;
+            cursor: pointer;
+        }
+        
+        .card-body button:hover {
+            background: #005bb5;
+        }
+        
+        .badge-new {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #ff4b5c;
+            color: #fff;
+            padding: 0.2rem 0.5rem;
+            font-size: 0.75rem;
+            border-radius: 3px;
+        }
+        
+        .badge-paid {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #28a745;
+            color: #fff;
+            padding: 0.2rem 0.5rem;
+            font-size: 0.75rem;
+            border-radius: 3px;
+        }
+        
+        .badge-unpaid {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #6c757d;
+            color: #fff;
+            padding: 0.2rem 0.5rem;
+            font-size: 0.75rem;
+            border-radius: 3px;
+        }
+        
+        .star-rating {
+            display: flex;
+            margin-top: 0.5rem;
+        }
+        
+        .star-rating span {
+            font-size: 1rem;
+            color: #ccc;
+            margin-right: 2px;
+            cursor: pointer;
+        }
+        
+        .star-rating .filled {
+            color: #ffc107;
+        }
+        
+        .comments {
+            margin-top: 0.5rem;
+            border-top: 1px solid #eee;
+            padding-top: 0.5rem;
+        }
+        
+        .comment {
+            font-size: 0.85rem;
+            margin-bottom: 0.3rem;
+        }
+        /* New Profile Inputs */
+        
+        #profile input[type="text"],
+        #profile input[type="email"],
+        #profile input[type="file"] {
+            width: 100%;
+            padding: 0.6rem;
+            margin-bottom: 0.8rem;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+        
+        #profile button {
+            background: #3b82f6;
+            border: none;
+            padding: 0.6rem 1rem;
+            color: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        
+        #profile button:hover {
+            background: #2563eb;
+        }
+        
+        .contact-section {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: #e2f3ff;
+            border-radius: 8px;
+        }
+        
+        #filterInputs input {
+            margin-right: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        
+        @media(max-width:768px) {
+            .container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                flex-direction: row;
+                overflow-x: auto;
+            }
+            .sidebar h2 {
+                display: none;
+            }
+            .sidebar a {
+                margin: 0 0.5rem;
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <h1>Student Dashboard</h1>
+        <div class="logout">Logout</div>
+    </nav>
+
+    <div class="container">
+
+        <div class="sidebar">
+            <img id="profilePhoto" src="https://via.placeholder.com/100" alt="Profile Photo">
+            <h2>My Profile</h2>
+            <a href="#" onclick="showSection('profile')">Profile</a>
+            <a href="#" onclick="showSection('internships')">Internships</a>
+            <a href="#" onclick="showSection('jobs')">Jobs</a>
+            <a href="#" onclick="showSection('favorites')">Favorites</a>
+            <a href="#" onclick="showSection('contact')">Contact/Help</a>
+        </div>
+
+        <div class="main">
+
+            <!-- Profile Section -->
+            <div id="profile" class="section active">
+                <h2>My Profile</h2>
+
+                <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;">
+                    <div style="flex:1;background:#fff;padding:1rem;border-radius:10px;box-shadow:0 2px 5px rgba(0,0,0,0.1);">
+                        <strong>Profile Strength</strong>
+                        <div style="background:#e5e7eb;border-radius:5px;height:10px;margin-top:5px;">
+                            <div id="profileProgress" style="height:10px;width:0%;background:#3b82f6;border-radius:5px;"></div>
+                        </div>
+                        <small id="profileProgressText">0/5 fields (0%)</small>
+                    </div>
+                    <div style="flex:1;background:#fff;padding:1rem;border-radius:10px;box-shadow:0 2px 5px rgba(0,0,0,0.1);">
+                        <strong>Favorites</strong>
+                        <p id="favoriteCount">0 Saved opportunities</p>
+                    </div>
+                    <div style="flex:1;background:#fff;padding:1rem;border-radius:10px;box-shadow:0 2px 5px rgba(0,0,0,0.1);">
+                        <strong>Applications</strong>
+                        <p>0 Status tracked</p>
+                    </div>
+                </div>
+
+                <div style="background:#fff;padding:1rem;border-radius:10px;box-shadow:0 2px 5px rgba(0,0,0,0.1);">
+                    <h3>Edit Profile</h3>
+                    <form id="profileForm">
+                        <input type="text" id="nameInput" placeholder="Full Name">
+                        <input type="email" id="emailInput" placeholder="Email">
+                        <input type="text" id="locationInput" placeholder="Location">
+                        <input type="text" id="educationInput" placeholder="Education (Degree, University, Year)">
+                        <input type="text" id="skillsInput" placeholder="Skills (comma separated)">
+                        <label>Upload Profile Photo:</label>
+                        <input type="file" id="photoInput" accept="image/*">
+                        <label>Upload Resume:</label>
+                        <input type="file" id="resumeInput" accept=".pdf,.doc,.docx">
+                        <button type="button" onclick="updateProfile()">Save Profile</button>
+                    </form>
+                    <div id="resumePreview" style="margin-top:1rem;"></div>
+                </div>
+            </div>
+
+            <!-- Internships -->
+            <div id="internships" class="section">
+                <h2>Available Internships</h2>
+                <div id="filterInputs">
+                    <input type="text" id="skillFilterIntern" placeholder="Filter by Skill">
+                    <button onclick="filterInternships()">Search</button>
+                </div>
+                <div id="internshipCards" class="cards"></div>
+            </div>
+
+            <!-- Jobs -->
+            <div id="jobs" class="section">
+                <h2>Available Jobs</h2>
+                <div id="filterInputs">
+                    <input type="text" id="skillFilterJob" placeholder="Filter by Skill">
+                    <button onclick="filterJobs()">Search</button>
+                </div>
+                <div id="jobCards" class="cards"></div>
+            </div>
+
+            <!-- Favorites -->
+            <div id="favorites" class="section">
+                <h2>My Favorites</h2>
+                <div id="favoriteCards" class="cards"></div>
+            </div>
+
+            <!-- Contact/Help -->
+            <div id="contact" class="section">
+                <h2>Contact/Help</h2>
+                <div class="contact-section">
+                    <p>If you are struggling to find internships or jobs, contact us:</p>
+                    <p><strong>Email:</strong> support@campusconnect.com</p>
+                    <p><strong>Phone:</strong> +91-1234567890</p>
+                    <p>Provide your details and we will guide you!</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Show section
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        // Dummy Data
+        let internships = [{
+            title: 'Web Dev Intern',
+            companyName: 'Google',
+            location: 'Bangalore',
+            deadline: '2025-10-30',
+            skills: 'HTML,CSS,JS',
+            experience: '0-1 Year',
+            salary: '5000/month',
+            jobType: 'Internship',
+            mode: 'Remote',
+            paid: true,
+            logo: 'https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg',
+            description: 'Work on frontend',
+            dateAdded: '2025-09-10',
+            comments: [],
+            rating: 0
+        }, {
+            title: 'UI/UX Intern',
+            companyName: 'Facebook',
+            location: 'Mumbai',
+            deadline: '2025-10-25',
+            skills: 'Figma,Adobe XD',
+            experience: '0-1 Year',
+            salary: 'Unpaid',
+            jobType: 'Internship',
+            mode: 'On-site',
+            paid: false,
+            logo: 'https://upload.wikimedia.org/wikipedia/commons/0/05/Facebook_Logo_%282019%29.png',
+            description: 'Design interfaces',
+            dateAdded: '2025-09-12',
+            comments: [],
+            rating: 0
+        }];
+
+        let jobs = [{
+            title: 'Frontend Developer',
+            companyName: 'Microsoft',
+            location: 'Hyderabad',
+            deadline: '2025-11-05',
+            skills: 'React,JS,CSS',
+            experience: '1-2 Years',
+            salary: '40000/month',
+            jobType: 'Full-time',
+            mode: 'Remote',
+            paid: true,
+            logo: 'https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg',
+            description: 'Develop frontend apps',
+            dateAdded: '2025-09-12',
+            comments: [],
+            rating: 0
+        }];
+
+        // Load Posts
+        function loadPosts() {
+            const internshipCards = document.getElementById('internshipCards');
+            const jobCards = document.getElementById('jobCards');
+            const favoriteCards = document.getElementById('favoriteCards');
+
+            internshipCards.innerHTML = '';
+            jobCards.innerHTML = '';
+            favoriteCards.innerHTML = '';
+
+            internships.forEach(post => internshipCards.innerHTML += generateCard(post, 'internship'));
+            jobs.forEach(post => jobCards.innerHTML += generateCard(post, 'job'));
+
+            let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+            favorites.forEach(post => favoriteCards.innerHTML += generateCard(post, 'favorite', true));
+
+            loadFavoriteCount();
+        }
+
+        // Generate Card
+        function generateCard(post, type, isFavorite = false) {
+            const favBtn = isFavorite ? '' : `<button onclick="addFavorite('${type}','${post.title}')">Add to Favorites</button>`;
+            const newBadge = (new Date() - new Date(post.dateAdded)) / (1000 * 60 * 60 * 24) <= 7 ? '<div class="badge-new">NEW</div>' : '';
+            const paidBadge = post.paid ? '<div class="badge-paid">Paid</div>' : '<div class="badge-unpaid">Unpaid</div>';
+
+            return `<div class="card">
+        <img src="${post.logo}" alt="Company Logo">
+        ${newBadge} ${paidBadge}
+        <div class="card-body">
+            <h3>${post.title}</h3>
+            <p><strong>Company:</strong> ${post.companyName}</p>
+            <p><strong>Location:</strong> ${post.location}</p>
+            <p><strong>Deadline:</strong> ${post.deadline}</p>
+            <p><strong>Skills:</strong> ${post.skills}</p>
+            <p><strong>Experience:</strong> ${post.experience}</p>
+            <p><strong>Salary/Stipend:</strong> ${post.salary}</p>
+            <p><strong>Type:</strong> ${post.jobType}, <strong>Mode:</strong> ${post.mode}</p>
+            <p>${post.description}</p>
+            ${favBtn}
+            <div class="star-rating" onclick="rateJob('${type}','${post.title}',event)">
+                ${[1,2,3,4,5].map(i=>`<span data-star="${i}">&#9733;</span>`).join('')}
+            </div>
+            <div class="comments" id="comments-${type}-${post.title.replace(/\s/g,'')}"></div>
+            <input type="text" placeholder="Add comment" onkeypress="addComment(event,'${type}','${post.title}')">
+        </div>
+    </div>`;
+    }
+
+    // Add to Favorites
+    function addFavorite(type,title){
+      let posts = type==='internship'?internships:jobs;
+      const post=posts.find(p=>p.title===title);
+      if(!post) return;
+      let favorites=JSON.parse(localStorage.getItem('favorites')||'[]');
+      if(!favorites.find(f=>f.title===title)) favorites.push(post);
+      localStorage.setItem('favorites',JSON.stringify(favorites));
+      loadPosts();
+    }
+
+    // Profile Update
+    function updateProfile(){
+      const name=document.getElementById('nameInput').value;
+      const email=document.getElementById('emailInput').value;
+      const location=document.getElementById('locationInput').value;
+      const education=document.getElementById('educationInput').value;
+      const skills=document.getElementById('skillsInput').value;
+
+      const photoInput=document.getElementById('photoInput');
+      if(photoInput.files && photoInput.files[0]){
+        const reader=new FileReader();
+        reader.onload=function(e){
+          document.getElementById('profilePhoto').src=e.target.result;
+        };
+        reader.readAsDataURL(photoInput.files[0]);
+      }
+
+      const resumeInput=document.getElementById('resumeInput');
+      if(resumeInput.files && resumeInput.files[0]){
+        document.getElementById('resumePreview').innerHTML=`<p>Uploaded Resume: ${resumeInput.files[0].name}</p>`;
+      }
+
+      // Save to localStorage
+      const profileData={name,email,location,education,skills};
+      localStorage.setItem('profileData',JSON.stringify(profileData));
+
+      updateProfileProgress();
+      loadFavoriteCount();
+      alert('Profile updated successfully!');
+    }
+
+    // Profile Strength
+    function updateProfileProgress() {
+      const fields = [
+        document.getElementById('nameInput').value.trim(),
+        document.getElementById('emailInput').value.trim(),
+        document.getElementById('locationInput').value.trim(),
+        document.getElementById('educationInput').value.trim(),
+        document.getElementById('skillsInput').value.trim()
+      ];
+      const filled = fields.filter(f => f !== '').length;
+      const percent = Math.round((filled / fields.length) * 100);
+      document.getElementById('profileProgress').style.width = percent + '%';
+      document.getElementById('profileProgressText').innerText = `${filled}/5 fields (${percent}%)`;
+    }
+
+    // Load Favorites Count
+    function loadFavoriteCount() {
+      let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+      document.getElementById('favoriteCount').innerText = favorites.length + ' Saved opportunities';
+    }
+
+    // Rating
+    function rateJob(type,title,event){
+      if(event.target.dataset.star){
+        let posts=type==='internship'?internships:jobs;
+        let post=posts.find(p=>p.title===title);
+        post.rating=event.target.dataset.star;
+        alert(`Rated ${post.title} as ${post.rating} stars`);
+      }
+    }
+
+    // Comment
+    function addComment(e,type,title){
+      if(e.key==='Enter'){
+        let comment=e.target.value;
+        let commentDiv=document.getElementById(`comments-${type}-${title.replace(/\s/g,'')}`);
+        commentDiv.innerHTML+=`<div class="comment">${comment}</div>`;
+        e.target.value='';
+      }
+    }
+
+    // Filtering
+    function filterInternships(){
+      const skill=document.getElementById('skillFilterIntern').value.toLowerCase();
+      const internshipCards=document.getElementById('internshipCards');
+      internshipCards.innerHTML='';
+      internships.filter(i=>i.skills.toLowerCase().includes(skill)).forEach(post=>internshipCards.innerHTML+=generateCard(post,'internship'));
+    }
+
+    function filterJobs(){
+      const skill=document.getElementById('skillFilterJob').value.toLowerCase();
+      const jobCards=document.getElementById('jobCards');
+      jobCards.innerHTML='';
+      jobs.filter(i=>i.skills.toLowerCase().includes(skill)).forEach(post=>jobCards.innerHTML+=generateCard(post,'job'));
+    }
+
+    // On Load
+    window.onload=function(){
+      loadPosts();
+      updateProfileProgress();
+    }
+
+    // Logout
+    document.querySelector('.logout').addEventListener('click',()=>{
+      localStorage.clear();
+      window.location.href='login.html'; // change to your login page
+    });
+    </script>
+</body>
+
+</html>

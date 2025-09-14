@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Student Dashboard - Upgraded UI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* ---------- Base ---------- */
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif
+        }
+        
+        body {
+            background: #f4f6f9;
+            color: #222;
+            transition: background .25s, color .25s
+        }
+        
+        body.dark {
+            background: #0f1720;
+            color: #e6eef6
+        }
+        
+        a {
+            text-decoration: none;
+            color: inherit
+        }
+        
+        button {
+            cursor: pointer;
+            border: 0
+        }
+        /* ---------- Nav ---------- */
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(90deg, #0ea5e9, #0369a1);
+            color: #fff
+        }
+        
+        nav h1 {
+            font-size: 1.4rem;
+            display: flex;
+            gap: .5rem;
+            align-items: center
+        }
+        
+        .nav-actions {
+            display: flex;
+            gap: .6rem;
+            align-items: center
+        }
+        
+        .btn {
+            background: #fff;
+            color: #0369a1;
+            padding: .45rem .7rem;
+            border-radius: 6px;
+            font-weight: 600
+        }
+        
+        .icon-btn {
+            background: transparent;
+            color: #fff;
+            padding: .45rem .6rem;
+            border-radius: 6px;
+            font-size: 1.05rem
+        }
+        
+        .notif {
+            position: relative
+        }
+        
+        .notif .count {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: #ff3b3b;
+            color: #fff;
+            border-radius: 50%;
+            font-size: .7rem;
+            padding: .12rem .45rem
+        }
+        /* ---------- Layout ---------- */
+        
+        .wrap {
+            display: flex;
+            min-height: 88vh;
+            padding: 1.25rem;
+            gap: 1.25rem
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: #111827;
+            color: #fff;
+            padding: 1.25rem;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: .8rem
+        }
+        
+        .sidebar img {
+            width: 86px;
+            border-radius: 50%;
+            margin: 0 auto
+        }
+        
+        .sidebar h2 {
+            text-align: center;
+            font-size: 1.05rem;
+            margin-top: .25rem
+        }
+        
+        .sidebar a {
+            display: block;
+            padding: .6rem .8rem;
+            border-radius: 8px;
+            color: #fff;
+            margin-top: .35rem
+        }
+        
+        .sidebar a:hover {
+            background: #0ea5e9;
+            color: #012a4a
+        }
+        
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem
+        }
+        /* ---------- Summary ---------- */
+        
+        .summary {
+            display: flex;
+            gap: 1rem;
+            align-items: stretch
+        }
+        
+        .summary .card {
+            flex: 1;
+            background: #fff;
+            padding: .9rem;
+            border-radius: 10px;
+            box-shadow: 0 6px 18px rgba(16, 24, 40, 0.06)
+        }
+        
+        body.dark .summary .card {
+            background: #071122
+        }
+        
+        .summary h3 {
+            font-size: .95rem;
+            color: #334155;
+            margin-bottom: .4rem
+        }
+        
+        .summary p {
+            font-size: 1.25rem;
+            font-weight: 700
+        }
+        
+        .progress-outer {
+            height: 10px;
+            background: #e6f0f6;
+            border-radius: 10px;
+            overflow: hidden
+        }
+        
+        .progress-inner {
+            height: 10px;
+            background: #10b981;
+            width: 0;
+            transition: width .5s
+        }
+        /* ---------- Sections ---------- */
+        
+        .section {
+            display: none;
+            padding: .6rem 0 0
+        }
+        
+        .section.active {
+            display: block;
+            animation: fadeIn .25s
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(6px)
+            }
+            to {
+                opacity: 1;
+                transform: none
+            }
+        }
+        /* ---------- Forms ---------- */
+        
+        form {
+            background: linear-gradient(180deg, #ffffff, #f7fbff);
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 6px 18px rgba(16, 24, 40, 0.04)
+        }
+        
+        body.dark form {
+            background: linear-gradient(180deg, #071b2a, #071827)
+        }
+        
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: .55rem;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+            margin-bottom: .6rem;
+            background: transparent
+        }
+        
+        textarea {
+            resize: vertical
+        }
+        
+        label {
+            font-size: .85rem;
+            margin-bottom: .25rem;
+            display: block
+        }
+        
+        .row {
+            display: flex;
+            gap: .6rem
+        }
+        
+        .row .col {
+            flex: 1
+        }
+        
+        .muted {
+            color: #64748b;
+            font-size: .9rem
+        }
+        /* ---------- Cards ---------- */
+        
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem
+        }
+        
+        .job-card {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(2, 6, 23, 0.06);
+            transition: transform .18s, box-shadow .18s;
+            padding: 0.6rem
+        }
+        
+        body.dark .job-card {
+            background: #071227
+        }
+        
+        .job-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 18px 40px rgba(2, 6, 23, 0.12)
+        }
+        
+        .job-head {
+            display: flex;
+            gap: .8rem;
+            align-items: center;
+            padding: .5rem
+        }
+        
+        .job-head img {
+            width: 64px;
+            height: 64px;
+            object-fit: contain;
+            border-radius: 10px;
+            background: #f3f4f6;
+            padding: .4rem
+        }
+        
+        .job-body {
+            padding: .5rem .6rem
+        }
+        
+        .job-body h4 {
+            color: #075985;
+            margin-bottom: .25rem
+        }
+        
+        .meta {
+            font-size: .85rem;
+            color: #475569;
+            margin-bottom: .45rem
+        }
+        
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .35rem;
+            margin-bottom: .5rem
+        }
+        
+        .tag {
+            padding: .25rem .5rem;
+            border-radius: 999px;
+            font-size: .75rem;
+            background: #0369a1;
+            color: #fff
+        }
+        
+        body.dark .tag {
+            background: #0ea5e9;
+            color: #052025
+        }
+        
+        .job-actions {
+            display: flex;
+            gap: .5rem;
+            flex-wrap: wrap;
+            margin-top: .5rem
+        }
+        
+        .btn-primary {
+            background: #0369a1;
+            color: #fff;
+            padding: .5rem .65rem;
+            border-radius: 8px
+        }
+        
+        .btn-ghost {
+            background: transparent;
+            border: 1px solid #cbd5e1;
+            color: #0f172a;
+            padding: .45rem .6rem;
+            border-radius: 8px
+        }
+        /* ---------- Status badges ---------- */
+        
+        .status {
+            display: inline-block;
+            padding: .25rem .5rem;
+            border-radius: 999px;
+            font-size: .75rem
+        }
+        
+        .status.applied {
+            background: #fde68a;
+            color: #92400e
+        }
+        
+        .status.interview {
+            background: #bfdbfe;
+            color: #08306b
+        }
+        
+        .status.selected {
+            background: #bbf7d0;
+            color: #064e3b
+        }
+        
+        .status.rejected {
+            background: #fecaca;
+            color: #7f1d1d
+        }
+        /* ---------- Small utility ---------- */
+        
+        .small {
+            font-size: .85rem;
+            color: #475569
+        }
+        
+        .right {
+            margin-left: auto
+        }
+        /* ---------- Toast ---------- */
+        
+        .toast-wrap {
+            position: fixed;
+            right: 18px;
+            bottom: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: .5rem;
+            z-index: 1200
+        }
+        
+        .toast {
+            background: #0f172a;
+            color: #fff;
+            padding: .6rem .85rem;
+            border-radius: 8px;
+            box-shadow: 0 8px 20px rgba(2, 6, 23, .3);
+            opacity: 0;
+            transform: translateY(8px);
+            animation: pop .4s forwards
+        }
+        
+        @keyframes pop {
+            to {
+                opacity: 1;
+                transform: none
+            }
+        }
+        /* ---------- Responsive ---------- */
+        
+        @media(max-width:880px) {
+            .wrap {
+                flex-direction: column;
+                padding: 1rem
+            }
+            .sidebar {
+                width: 100%;
+                flex-direction: row;
+                gap: .6rem;
+                align-items: center;
+                overflow: auto;
+                padding: .6rem
+            }
+            .sidebar img {
+                width: 44px
+            }
+            .sidebar h2 {
+                display: none
+            }
+            .summary {
+                flex-direction: column
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <h1>📚 Student Dashboard</h1>
+        <div class="nav-actions">
+            <div class="notif" title="New matches">
+                <button class="icon-btn" id="notifBtn">🔔</button>
+                <span class="count" id="notifCount" style="display:none">0</span>
+            </div>
+            <button class="icon-btn" id="themeToggle" title="Toggle dark mode">🌙</button>
+            <button class="btn" id="logoutBtn">Logout</button>
+        </div>
+    </nav>
+
+    <div class="wrap">
+        <!-- Sidebar (kept profile structure untouched) -->
+        <aside class="sidebar">
+            <img id="profilePhoto" src="https://via.placeholder.com/100" alt="Profile">
+            <h2>My Profile</h2>
+            <a href="#" onclick="showSection('profile')">👤 Profile</a>
+            <a href="#" onclick="showSection('internships')">💼 Internships</a>
+            <a href="#" onclick="showSection('jobs')">🧭 Jobs</a>
+            <a href="#" onclick="showSection('favorites')">❤️ Favorites</a>
+            <a href="#" onclick="showSection('applications')">📝 My Applications</a>
+            <a href="#" onclick="showSection('savedSearches')">🔖 Saved Searches</a>
+            <a href="#" onclick="showSection('recommendations')">🎯 Recommendations</a>
+            <a href="#" onclick="showSection('contact')">📨 Contact/Help</a>
+        </aside>
+
+        <!-- Main -->
+        <main class="main">
+            <!-- Summary -->
+            <div class="summary">
+                <div class="card">
+                    <h3>Profile Strength</h3>
+                    <div class="progress-outer" style="margin-top:.5rem">
+                        <div id="profileProgress" class="progress-inner" style="width:0"></div>
+                    </div>
+                    <p class="small" id="profileProgressText">0/5 fields</p>
+                </div>
+                <div class="card">
+                    <h3>Favorites</h3>
+                    <p id="favCount">0</p>
+                    <p class="small">Saved opportunities</p>
+                </div>
+                <div class="card">
+                    <h3>Applications</h3>
+                    <p id="appCount">0</p>
+                    <p class="small">Status tracked</p>
+                </div>
+            </div>
+
+            <!-- === Profile (kept exactly like you had it) === -->
+            <section id="profile" class="section active">
+                <h2>Edit Profile</h2>
+                <form id="profileForm">
+                    <input type="text" id="nameInput" placeholder="Full Name">
+                    <input type="email" id="emailInput" placeholder="Email">
+                    <input type="text" id="locationInput" placeholder="Location">
+                    <input type="text" id="educationInput" placeholder="Education (Degree, University, Year)">
+                    <input type="text" id="skillsInput" placeholder="Skills (comma separated)">
+                    <label>Upload Profile Photo:</label>
+                    <input type="file" id="photoInput" accept="image/*">
+                    <label>Upload Resume:</label>
+                    <input type="file" id="resumeInput" accept=".pdf,.doc,.docx">
+                    <button type="button" onclick="updateProfile()">Save Profile</button>
+                </form>
+                <div id="resumePreview" style="margin-top:1rem;"></div>
+            </section>
+
+            <!-- Internships -->
+            <section id="internships" class="section">
+                <h2>Available Internships</h2>
+
+                <!-- Filter Row -->
+                <div style="display:flex;gap:.6rem;margin-bottom:.6rem;align-items:center">
+                    <input id="skillFilterIntern" placeholder="Filter by skill (e.g. React)" style="flex:1;padding:.5rem;border-radius:8px;border:1px solid #d1d5db">
+                    <select id="filterModeIntern" style="padding:.5rem;border-radius:8px;border:1px solid #d1d5db">
+            <option value="">All modes</option>
+            <option>Remote</option><option>On-site</option><option>Hybrid</option>
+          </select>
+                    <select id="filterPaidIntern" style="padding:.5rem;border-radius:8px;border:1px solid #d1d5db">
+            <option value="">All</option><option value="paid">Paid</option><option value="unpaid">Unpaid</option>
+          </select>
+                    <button class="btn-primary" onclick="filterInternships()">Search</button>
+                    <button class="btn-ghost" onclick="saveSearch('internship')">Save Search</button>
+                </div>
+
+                <div id="internshipCards" class="cards"></div>
+            </section>
+
+            <!-- Jobs -->
+            <section id="jobs" class="section">
+                <h2>Available Jobs</h2>
+
+                <div style="display:flex;gap:.6rem;margin-bottom:.6rem;align-items:center">
+                    <input id="skillFilterJob" placeholder="Filter by skill (e.g. React)" style="flex:1;padding:.5rem;border-radius:8px;border:1px solid #d1d5db">
+                    <select id="filterModeJob" style="padding:.5rem;border-radius:8px;border:1px solid #d1d5db">
+            <option value="">All modes</option><option>Remote</option><option>On-site</option><option>Hybrid</option>
+          </select>
+                    <select id="filterPaidJob" style="padding:.5rem;border-radius:8px;border:1px solid #d1d5db">
+            <option value="">All</option><option value="paid">Paid</option><option value="unpaid">Unpaid</option>
+          </select>
+                    <button class="btn-primary" onclick="filterJobs()">Search</button>
+                    <button class="btn-ghost" onclick="saveSearch('job')">Save Search</button>
+                </div>
+
+                <div id="jobCards" class="cards"></div>
+            </section>
+
+            <!-- Favorites -->
+            <section id="favorites" class="section">
+                <h2>My Favorites</h2>
+                <div id="favoriteCards" class="cards"></div>
+            </section>
+
+            <!-- Applications -->
+            <section id="applications" class="section">
+                <h2>My Applications</h2>
+                <div id="applicationCards" class="cards"></div>
+            </section>
+
+            <!-- Saved Searches -->
+            <section id="savedSearches" class="section">
+                <h2>Saved Searches</h2>
+                <div id="savedSearchList" style="margin-top:.6rem"></div>
+            </section>
+
+            <!-- Recommendations -->
+            <section id="recommendations" class="section">
+                <h2>Recommended For You</h2>
+                <p class="muted">Based on the skills in your profile. <button style="margin-left:.5rem" class="btn-ghost" onclick="recommendJobs()">Run now</button></p>
+                <div id="recommendationCards" class="cards" style="margin-top:.6rem"></div>
+            </section>
+
+            <!-- Contact / Help -->
+            <section id="contact" class="section">
+                <h2>Contact/Help</h2>
+                <div style="background:#e6f4ff;padding:1rem;border-radius:8px">
+                    <p>If you are struggling to find internships or jobs, contact us:</p>
+                    <p><strong>Email:</strong> support@campusconnect.com</p>
+                    <p><strong>Phone:</strong> +91-1234567890</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Toast container -->
+    <div class="toast-wrap" id="toastWrap"></div>
+
+    <script>
+        /* ===========================
+             Original data + base logic
+             (kept core profile structure and ids unchanged)
+             =========================== */
+
+        // Dummy Data - kept similar to your original sample
+        let internships = [{
+            title: 'Web Dev Intern',
+            companyName: 'Google',
+            location: 'Bangalore',
+            deadline: '2025-10-30',
+            skills: 'HTML,CSS,JS',
+            experience: '0-1 Year',
+            salary: '5000/month',
+            jobType: 'Internship',
+            mode: 'Remote',
+            paid: true,
+            logo: 'https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg',
+            description: 'Work on frontend',
+            dateAdded: '2025-09-10',
+            comments: [],
+            rating: 0
+        }, {
+            title: 'UI/UX Intern',
+            companyName: 'Facebook',
+            location: 'Mumbai',
+            deadline: '2025-10-25',
+            skills: 'Figma,Adobe XD',
+            experience: '0-1 Year',
+            salary: 'Unpaid',
+            jobType: 'Internship',
+            mode: 'On-site',
+            paid: false,
+            logo: 'https://upload.wikimedia.org/wikipedia/commons/0/05/Facebook_Logo_%282019%29.png',
+            description: 'Design interfaces',
+            dateAdded: '2025-09-12',
+            comments: [],
+            rating: 0
+        }];
+
+        let jobs = [{
+            title: 'Frontend Developer',
+            companyName: 'Microsoft',
+            location: 'Hyderabad',
+            deadline: '2025-11-05',
+            skills: 'React,JS,CSS',
+            experience: '1-2 Years',
+            salary: '40000/month',
+            jobType: 'Full-time',
+            mode: 'Remote',
+            paid: true,
+            logo: 'https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg',
+            description: 'Develop frontend apps',
+            dateAdded: '2025-09-12',
+            comments: [],
+            rating: 0
+        }];
+
+        // load saved arrays from localStorage if available (persisting posts)
+        const persistedInterns = JSON.parse(localStorage.getItem('internships'));
+        const persistedJobs = JSON.parse(localStorage.getItem('jobs'));
+        if (Array.isArray(persistedInterns)) internships = persistedInterns;
+        if (Array.isArray(persistedJobs)) jobs = persistedJobs;
+
+        // applications stored as array of objects {post, type, status}
+        let applications = JSON.parse(localStorage.getItem('applications') || '[]');
+
+        /* ===========================
+           UI utilities
+           =========================== */
+        function toast(msg, time = 3000) {
+            const wrap = document.getElementById('toastWrap');
+            const el = document.createElement('div');
+            el.className = 'toast';
+            el.innerText = msg;
+            wrap.appendChild(el);
+            setTimeout(() => el.style.opacity = '1', 50);
+            setTimeout(() => el.remove(), time);
+        }
+
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            const el = document.getElementById(id);
+            if (el) el.classList.add('active');
+            // scroll to top of main
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        /* ===========================
+           Card generation (jobs / interns)
+           - uses tag chips for skills
+           =========================== */
+        function skillChips(skillsStr) {
+            if (!skillsStr) return '';
+            const arr = skillsStr.split(',').map(s => s.trim()).filter(Boolean);
+            return `<div class="tags">${arr.map(s=>`<span class="tag">${escapeHtml(s)}</span>`).join('')}</div>`;
+  }
+
+  // escape small for safety - not strictly necessary but good habit
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+  }
+
+  function statusBadge(status){
+    if (!status) return '';
+    const cls = status==='Applied' ? 'applied' : status==='Interview Scheduled' ? 'interview' :
+                status==='Selected' ? 'selected' : status==='Rejected' ? 'rejected' : '';
+    return `<span class="status ${cls}">${status}</span>`;
+  }
+
+  function generateCard(post, type) {
+    const newBadge = (new Date() - new Date(post.dateAdded)) / (1000*60*60*24) <= 7 ? '<div style="position:absolute;left:10px;top:10px;background:#ff4b5c;color:#fff;padding:.2rem .45rem;border-radius:6px;font-size:.75rem">NEW</div>' : '';
+    const paidBadge = post.paid ? '<div style="position:absolute;right:10px;top:10px;background:#10b981;color:#fff;padding:.2rem .45rem;border-radius:6px;font-size:.75rem">Paid</div>' : '<div style="position:absolute;right:10px;top:10px;background:#94a3b8;color:#fff;padding:.2rem .45rem;border-radius:6px;font-size:.75rem">Unpaid</div>';
+    const tags = skillChips(post.skills);
+    return `<div class="job-card" style="position:relative">
+      ${newBadge}${paidBadge}
+      <div class="job-head">
+        <img src="${post.logo}" alt="logo">
+        <div style="flex:1">
+          <h4>${escapeHtml(post.title)}</h4>
+          <div class="meta">${escapeHtml(post.companyName)} • ${escapeHtml(post.location)} • ${escapeHtml(post.mode)}</div>
+        </div>
+        <div class="right small">Deadline: ${escapeHtml(post.deadline)}</div>
+      </div>
+      <div class="job-body">
+        ${tags}
+        <div class="small">${escapeHtml(post.description)}</div>
+        <div class="job-actions">
+          <button class="btn-primary" onclick="applyNow('${type}','${escapeForAttr(post.title)}')">Apply</button>
+          <button class="btn-ghost" onclick="addFavorite('${type}','${escapeForAttr(post.title)}')">Favorite</button>
+          <button class="btn-ghost" onclick="showDetails('${escapeForAttr(post.title)}','${type}')">Details</button>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  // helper to safely pass title into onclick string (replace single quotes)
+  function escapeForAttr(s){ return s.replace(/'/g,"\\'"); }
+
+  /* ===========================
+     Load / Render functions
+     =========================== */
+  function loadPosts(){
+    // render internships
+    const internDiv = document.getElementById('internshipCards');
+    internDiv.innerHTML = internships.map(i=>generateCard(i,'internship')).join('') || '<p class="muted">No internships yet.</p>';
+
+    // render jobs
+    const jobDiv = document.getElementById('jobCards');
+    jobDiv.innerHTML = jobs.map(j=>generateCard(j,'job')).join('') || '<p class="muted">No jobs yet.</p>';
+
+    // load favorites
+    const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+    document.getElementById('favoriteCards').innerHTML = favorites.map(f=>generateCard(f,'favorite')).join('') || '<p class="muted">No favorites yet.</p>';
+    document.getElementById('favCount').innerText = favorites.length;
+
+    // load applications
+    renderApplications();
+
+    // saved searches
+    renderSavedSearches();
+
+    // recommendations (do not auto-run, but show placeholder)
+    document.getElementById('recommendationCards').innerHTML = '<p class="muted">Click "Run now" to generate recommendations from your profile skills.</p>';
+
+    // notification count
+    updateNotifications();
+  }
+
+  /* ===========================
+     Favorites
+     =========================== */
+  function addFavorite(type, title){
+    const posts = type==='internship'?internships:jobs;
+    const post = posts.find(p=>p.title===title);
+    if(!post) return toast('Item not found.');
+    let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+    if (!favorites.find(f=>f.title===post.title)){
+      favorites.push(post);
+      localStorage.setItem('favorites', JSON.stringify(favorites));
+      toast('Added to favorites');
+    } else {
+      toast('Already in favorites');
+    }
+    loadPosts();
+  }
+
+  /* ===========================
+     Apply & Applications
+     =========================== */
+  function applyNow(type, title){
+    const posts = type==='internship'?internships:jobs;
+    const post = posts.find(p=>p.title===title);
+    if(!post) return toast('Opportunity not found');
+    // Add to applications array if not exists
+    if (!applications.find(a => a.post.title === post.title && a.type === type)){
+      applications.push({post, type, status: 'Applied', appliedAt: new Date().toISOString()});
+      localStorage.setItem('applications', JSON.stringify(applications));
+      toast('Application submitted');
+    } else {
+      toast('You have already applied to this position');
+    }
+    renderApplications();
+    updateCounts();
+  }
+
+  function renderApplications(){
+    const appDiv = document.getElementById('applicationCards');
+    if (!applications || applications.length===0){
+      appDiv.innerHTML = '<p class="muted">No applications yet.</p>';
+      document.getElementById('appCount').innerText = 0;
+      return;
+    }
+    appDiv.innerHTML = applications.map(a=>{
+      return `<div class="job-card" style="position:relative;padding:.6rem">
+        <div class="job-head">
+          <img src="${a.post.logo}" alt="">
+          <div style="flex:1">
+            <h4>${escapeHtml(a.post.title)}</h4>
+            <div class="meta">${escapeHtml(a.post.companyName)} • ${escapeHtml(a.post.location)}</div>
+          </div>
+          <div class="right">${statusBadge(a.status)}</div>
+        </div>
+        <div style="padding:.5rem">
+          <div class="small">Applied: ${new Date(a.appliedAt).toLocaleDateString()}</div>
+          <div style="margin-top:.6rem;display:flex;gap:.4rem">
+            <button class="btn-ghost" onclick="updateAppStatus('${escapeForAttr(a.post.title)}','Interview Scheduled')">Mark Interview</button>
+            <button class="btn-ghost" onclick="updateAppStatus('${escapeForAttr(a.post.title)}','Selected')">Mark Selected</button>
+            <button class="btn-ghost" onclick="updateAppStatus('${escapeForAttr(a.post.title)}','Rejected')">Mark Rejected</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+    updateCounts();
+  }
+
+  function updateAppStatus(title, status){
+    applications = applications.map(a => a.post.title === title ? {...a, status} : a);
+    localStorage.setItem('applications', JSON.stringify(applications));
+    toast('Status updated to: ' + status);
+    renderApplications();
+  }
+
+  /* ===========================
+     Profile: kept structure, only enhanced progress
+     =========================== */
+  function updateProfile(){
+    // preserve original logic: collect input values, store in localStorage
+    const name=document.getElementById('nameInput').value;
+    const email=document.getElementById('emailInput').value;
+    const location=document.getElementById('locationInput').value;
+    const education=document.getElementById('educationInput').value;
+    const skills=document.getElementById('skillsInput').value;
+
+    const photoInput=document.getElementById('photoInput');
+    if(photoInput.files && photoInput.files[0]){
+      const reader=new FileReader();
+      reader.onload=function(e){
+        document.getElementById('profilePhoto').src=e.target.result;
+        localStorage.setItem('profilePhoto',e.target.result);
+      }
+      reader.readAsDataURL(photoInput.files[0]);
+    }
+
+    const resumeInput=document.getElementById('resumeInput');
+    if(resumeInput.files && resumeInput.files[0]){
+      const fileName=resumeInput.files[0].name;
+      document.getElementById('resumePreview').innerHTML=`Resume: ${fileName}`;
+      localStorage.setItem('resumeFile',fileName);
+    }
+
+    const profileData={name,email,location,education,skills};
+    localStorage.setItem('profileData',JSON.stringify(profileData));
+    toast('Profile updated');
+
+    // update profile strength bar (same behaviour, but visual)
+    calculateProfileStrength();
+
+    // update notifications (matches may change)
+    updateNotifications();
+  }
+
+  function loadProfile(){
+    const profileData=JSON.parse(localStorage.getItem('profileData')||'{}');
+    document.getElementById('nameInput').value=profileData.name||'';
+    document.getElementById('emailInput').value=profileData.email||'';
+    document.getElementById('locationInput').value=profileData.location||'';
+    document.getElementById('educationInput').value=profileData.education||'';
+    document.getElementById('skillsInput').value=profileData.skills||'';
+    const photo=localStorage.getItem('profilePhoto');
+    if(photo) document.getElementById('profilePhoto').src=photo;
+    const resume=localStorage.getItem('resumeFile');
+    if(resume) document.getElementById('resumePreview').innerHTML=`Resume: ${resume}`;
+    calculateProfileStrength();
+  }
+
+  function calculateProfileStrength(){
+    const profileData=JSON.parse(localStorage.getItem('profileData')||'{}');
+    let filled=0;
+    ['name','email','location','education','skills'].forEach(f=>{
+      if(profileData[f]) filled++;
+    });
+    const percent=Math.round((filled/5)*100);
+    document.getElementById('profileProgress').style.width = percent + '%';
+    document.getElementById('profileProgressText').innerText = `${filled}/5 fields (${percent}%)`;
+    localStorage.setItem('profileProgress', percent);
+  }
+
+  /* ===========================
+     Filtering and Saved Searches
+     =========================== */
+  function filterInternships(){
+    const skill = document.getElementById('skillFilterIntern').value.trim().toLowerCase();
+    const mode = document.getElementById('filterModeIntern').value;
+    const paid = document.getElementById('filterPaidIntern').value;
+    const filtered = internships.filter(p=>{
+      const matchSkill = !skill || p.skills.toLowerCase().includes(skill);
+      const matchMode = !mode || p.mode === mode;
+      const matchPaid = !paid || (paid==='paid' ? p.paid === true : p.paid === false);
+      return matchSkill && matchMode && matchPaid;
+    });
+    document.getElementById('internshipCards').innerHTML = filtered.map(i=>generateCard(i,'internship')).join('') || '<p class="muted">No results.</p>';
+  }
+
+  function filterJobs(){
+    const skill = document.getElementById('skillFilterJob').value.trim().toLowerCase();
+    const mode = document.getElementById('filterModeJob').value;
+    const paid = document.getElementById('filterPaidJob').value;
+    const filtered = jobs.filter(p=>{
+      const matchSkill = !skill || p.skills.toLowerCase().includes(skill);
+      const matchMode = !mode || p.mode === mode;
+      const matchPaid = !paid || (paid==='paid' ? p.paid === true : p.paid === false);
+      return matchSkill && matchMode && matchPaid;
+    });
+    document.getElementById('jobCards').innerHTML = filtered.map(i=>generateCard(i,'job')).join('') || '<p class="muted">No results.</p>';
+  }
+
+  function saveSearch(type){
+    const filter = type==='internship' ? document.getElementById('skillFilterIntern').value : document.getElementById('skillFilterJob').value;
+    if(!filter){ toast('Enter a skill to save'); return; }
+    let saved = JSON.parse(localStorage.getItem('savedSearches')||'[]');
+    saved.push({type, filter, savedAt: new Date().toISOString()});
+    localStorage.setItem('savedSearches', JSON.stringify(saved));
+    toast('Search saved');
+    renderSavedSearches();
+  }
+
+  function renderSavedSearches(){
+    const saved = JSON.parse(localStorage.getItem('savedSearches')||'[]');
+    const holder = document.getElementById('savedSearchList');
+    if(!saved.length){ holder.innerHTML = '<p class="muted">No saved searches yet.</p>'; return; }
+    holder.innerHTML = saved.map((s, idx)=>`<div style="background:#fff;padding:.6rem;border-radius:8px;margin-bottom:.5rem;display:flex;gap:.6rem;align-items:center">
+      <div style="flex:1"><strong>${s.type}</strong> • "${escapeHtml(s.filter)}" <div class="small muted">Saved ${new Date(s.savedAt).toLocaleString()}</div></div>
+      <div><button class="btn-ghost" onclick="applySaved(${idx})">Apply</button> <button class="btn-ghost" onclick="deleteSaved(${idx})">Delete</button></div>
+    </div>`).join('');
+  }
+
+  function applySaved(idx){
+    const saved = JSON.parse(localStorage.getItem('savedSearches')||'[]');
+    const s = saved[idx];
+    if(!s) return;
+    if(s.type==='internship'){ document.getElementById('skillFilterIntern').value = s.filter; filterInternships(); showSection('internships'); }
+    else { document.getElementById('skillFilterJob').value = s.filter; filterJobs(); showSection('jobs'); }
+    toast('Saved search applied');
+  }
+  function deleteSaved(idx){
+    let saved = JSON.parse(localStorage.getItem('savedSearches')||'[]');
+    saved.splice(idx,1);
+    localStorage.setItem('savedSearches', JSON.stringify(saved));
+    renderSavedSearches();
+    toast('Saved search deleted');
+  }
+
+  /* ===========================
+     Recommendations (based on profile skills)
+     =========================== */
+  function recommendJobs(){
+    const profileData = JSON.parse(localStorage.getItem('profileData')||'{}');
+    if(!profileData.skills) { toast('Add skills to your profile first'); return; }
+    const skills = profileData.skills.toLowerCase().split(',').map(s=>s.trim()).filter(Boolean);
+    const all = internships.concat(jobs);
+    const recommended = all.filter(p => skills.some(s => p.skills.toLowerCase().includes(s)));
+    const holder = document.getElementById('recommendationCards');
+    if(!recommended.length){ holder.innerHTML = '<p class="muted">No recommendations based on current skills.</p>'; toast('No recommendations'); return; }
+    holder.innerHTML = recommended.map(r=>generateCard(r, (internships.includes(r)?'internship':'job'))).join('');
+    showSection('recommendations');
+    toast('Recommendations generated');
+  }
+
+  /* ===========================
+     Notifications - new items and profile matches
+     =========================== */
+  function updateNotifications(){
+    // Count new postings in last 7 days
+    const isNew = p => (new Date() - new Date(p.dateAdded)) / (1000*60*60*24) <= 7;
+    const newCount = internships.filter(isNew).length + jobs.filter(isNew).length;
+
+    // Count matches to profile skills (optional)
+    const profileData = JSON.parse(localStorage.getItem('profileData')||'{}');
+    let matchCount = 0;
+    if(profileData.skills){
+      const skills = profileData.skills.toLowerCase().split(',').map(s=>s.trim()).filter(Boolean);
+      const all = internships.concat(jobs);
+      matchCount = all.filter(p => skills.some(s => p.skills.toLowerCase().includes(s))).length;
+    }
+
+    const btnCount = Math.max(newCount, matchCount);
+    const el = document.getElementById('notifCount');
+    if(btnCount>0){ el.style.display='inline-block'; el.innerText = btnCount; } else { el.style.display='none'; }
+  }
+
+  document.getElementById('notifBtn').addEventListener('click', ()=>{
+    updateNotifications();
+    toast('Notifications refreshed');
+    // Optionally show the internships section
+    showSection('internships');
+  });
+
+  /* ===========================
+     Small helpers: show details (simple modal) and escape
+     =========================== */
+  function showDetails(title,type){
+    const arr = type==='internship'?internships: (type==='job'?jobs:[]);
+    const post = arr.find(p=>p.title===title);
+    if(!post){ toast('Details not found'); return; }
+    // simple details using toast area (small)
+    toast(`${post.title} @ ${post.companyName} • ${post.location}`);
+    // optionally open a modal here (left as exercise)
+  }
+
+  /* ===========================
+     Load initial saved state, UI bindings
+     =========================== */
+  function renderInitialStoredPosts(){
+    // If there are saved internships/jobs in LS, render them (these were already loaded above)
+    // ensure the arrays are stored in localStorage so new posts persist between reloads
+    localStorage.setItem('internships', JSON.stringify(internships));
+    localStorage.setItem('jobs', JSON.stringify(jobs));
+  }
+
+  function updateCounts(){
+    document.getElementById('appCount').innerText = applications.length || 0;
+    document.getElementById('favCount').innerText = (JSON.parse(localStorage.getItem('favorites')||'[]')).length || 0;
+  }
+
+  // small helper to render applications & counts after load
+  renderInitialStoredPosts();
+  loadProfile();
+  loadPosts();
+  updateCounts();
+
+  /* ===========================
+     Extra UI: theme toggle + logout
+     =========================== */
+  const themeToggle = document.getElementById('themeToggle');
+  function applyTheme(theme){
+    if(theme==='dark') document.body.classList.add('dark');
+    else document.body.classList.remove('dark');
+    localStorage.setItem('theme', theme);
+  }
+  themeToggle.addEventListener('click', ()=>{
+    const isDark = document.body.classList.toggle('dark');
+    localStorage.setItem('theme', isDark? 'dark':'light');
+    themeToggle.innerText = isDark ? '☀️' : '🌙';
+  });
+  // init theme
+  if(localStorage.getItem('theme')==='dark'){ applyTheme('dark'); themeToggle.innerText = '☀️'; }
+
+  // logout -> simple action
+  document.getElementById('logoutBtn').addEventListener('click', ()=>{
+    toast('Logged out');
+    // keep demo simple: do not redirect
+  });
+
+  /* ===========================
+     Utility: escape single quotes in inline onclicks when rendering existing items
+     (we used escapeForAttr earlier to keep titles safe)
+     =========================== */
+    </script>
+</body>
+
+</html>
